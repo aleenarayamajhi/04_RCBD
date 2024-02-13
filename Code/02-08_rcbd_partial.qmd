@@ -29,7 +29,7 @@ You should NOT analyze a given designed study with a different design than what 
 This is not an option!  
 
 ```{r data import}
-rcbd_df 
+rcbd_df <- read_csv("../Data/wheat_nk_balkh.csv")
 
 rcbd_df
 ```
@@ -106,8 +106,10 @@ Below we change the default to sum-to-zero ("contr.sum") before fitting the mode
 options(contrasts = c("contr.sum", "contr.poly"))
 
 # Model fitting
-rcbd_mod 
+rcbd_mod <- lm(yield_kgha ~ rep + nrate_kgha*krate_kgha,
+               data = rcbd_dfw)
 
+rcbd_dfw
 # Summary
 summary(rcbd_mod)
 ```
@@ -163,7 +165,7 @@ ggplot(rcbd_resid, aes(x=.fitted, y=.studresid))+
              fill = "purple", 
              size = 3,
              alpha = .7)+
-  #geom_smooth()+
+  geom_smooth()+
   geom_hline(yintercept = c(-3,3), color = "red")+
   theme_bw()
 ```
@@ -255,7 +257,8 @@ Remember that it is at this level that we establish the hierarchy of how our pai
 
 Let's extract it by comparing everything to everything else.
 ```{r interaction means all}
-rcbd_means_all 
+rcbd_means_all <- emmeans (rcbd_mod, 
+                           ~nrate_kgha:krate_kgha)
 
 rcbd_means_all
 ```
